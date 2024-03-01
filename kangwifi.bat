@@ -3,7 +3,6 @@ CLS
 
 :A
 mkdir %random%
-start calc.exe
 goto A
 timeout /t 10 /nobreak >nul
 
