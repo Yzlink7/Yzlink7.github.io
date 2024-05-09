@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link rel="stylesheet" href="onsenui.css">
+  <link rel="stylesheet" href="onsen-css-components.css">
+  <style>
+    ons-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #chat-container {
+      max-width: 400px;
+      width: 100%;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #chat-output {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    ons-input {
+      width: 70%;
+      margin-right: 5px;
+      box-sizing: border-box;
+    }
+
+    ons-button {
+      width: 28%;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+<ons-page>
+  <div id="chat-container">
+    <div id="chat-output"></div>
+    <ons-input id="nama" placeholder="Masukkan pesan anda"></ons-input>
+    <ons-button onclick="kirimPesan()">Kirim</ons-button>
+   <ons-button onclick="reloadWebSocket()">Reload</ons-button>
+  </div>
+</ons-page>
+
+<script src="socket.io.min.js"></script>
+<script src="jquery-3.3.1.slim.min.js"></script>
+<script src="sweetalert.js"></script>
+<script src="onsenui.js"></script>
+
+<script>
+var kay = "oke";
+
+function reloadWebSocket() {
+  ws.close();
+  location.reload();
+}
+  const chatOutput = document.getElementById("chat-output");
+  const inputNama = document.getElementById("nama");
+  let ipAddress;
+  
+ // const ws = new WebSocket("ws://192.168.32.115:12345");
+
+const ws = new WebSocket("wss://s11667.sgp1.piesocket.com/v3/1?api_key=BJYaw6F5HJqXWdyP36vb1U1JIvzwXiIMJXLJjmAY&notify_self=1");
+
+ ws.onopen = () => {
+  fetch('https://api64.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      ipAddress = data.ip;
+      // ws.send("ip:" + ipAddress); // Concatenate ip: with ipAddress
+    })
+    .catch(error => console.error("Error fetching IP:", error));
+};
+  
+  
+ ws.onmessage = (event) => {
+  const pesan = document.createElement("p");
+  pesan.textContent = event.data;
+  chatOutput.appendChild(pesan);
+  console.log(event.data);
+
+  
+
+  if ((event.data === "reload" || event.data === ipAddress) && kay === "oke") {
+    Swal.fire({
+      title: 'Reload Confirmation',
+      text: 'Are you sure you want to reload?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, reload!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ws.close();
+        location.reload();
+      }
+    });
+  }
+
+  if (event.data === "yt.open" && kay === "oke") {
+    Swal.fire({
+      title: 'Open YouTube Confirmation',
+      text: 'Are you sure you want to open YouTube?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, open!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ws.close();
+        window.location = 'https://yt.kangwifi.eu.org';
+      }
+    });
+  }
+
+  if (event.data === "alquran.open" && kay === "oke") {
+    Swal.fire({
+      title: 'Open Alquran Confirmation',
+      text: 'Are you sure you want to open Alquran?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, open!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ws.close();
+        window.location = 'https://alquran.kangwifi.eu.org';
+      }
+    });
+  }
+
+  if (event.data === "cuaca.open" && kay === "oke") {
+    Swal.fire({
+      title: 'Open Weather Confirmation',
+      text: 'Are you sure you want to open Weather?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, open!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ws.close();
+        window.location = '../Weather';
+      }
+    });
+  }
+
+  if (event.data === "ttt.open" && kay === "oke") {
+    Swal.fire({
+      title: 'Open Tic Tac Toe Confirmation',
+      text: 'Are you sure you want to open Tic Tac Toe?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, open!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if(result.isConfirmed) {
+        ws.close();
+        window.location = '../ttt';
+      }
+    });
+  }
+
+  if (event.data === "xnxx.open" && kay === "oke") {
+    Swal.fire({
+      title: 'Open XNXX Confirmation',
+      text: 'Are you sure you want to open XNXX?',
+      icon: 'question',
+      showCancelButton: false,
+      confirmButtonText: 'Yes, open!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ws.close();
+        window.location = 'https://xnxx.com';
+      }
+    });
+  }
+
+  // Add more conditions as needed
+};
+  
+function kirimPesan() {
+  const nama = inputNama.value;
+  const pesan = nama.toLowerCase(); // Convert the message to lowercase for case-insensitive matching
+
+  if (nama.trim() !== "") {
+    // Check if kay is equal to "nooke" and the message contains blocked keywords
+    if (kay !== "nooke" && (pesan.includes("reload") || pesan.includes("yt.open") || pesan.includes("alquran.open") || pesan.includes("cuaca.open") || pesan.includes("ttt.open") || pesan.includes("xnxx.open"))) {
+      Swal.fire({
+        icon: "warning",
+        title: "Pesan diblokir!",
+        text: "Certain keywords are not allowed in the message.",
+      });
+      inputNama.value = "";
+    } else {
+      // Corrected the condition to check for the string "root" in pesan
+      if (!pesan.includes("root")) {
+        ws.send(nama);
+        Swal.fire({
+          icon: "success",
+          title: "Pesan terkirim!",
+          text: "Success",
+        });
+        inputNama.value = "";
+      } else {
+     Swal.fire({
+          icon: "success",
+          title: "Admin!",
+          text: "anda adalah admin!",
+        });
+        kay = "nooke";
+       inputNama.value = "";
+      }
+    }
+  } else {
+    Swal.fire({
+      icon: "warning",
+      title: "Pesan kosong!",
+      text: "Mohon masukkan pesan Anda.",
+    });
+  }
+}
+
+</script>
+
+</body>
+</html>
